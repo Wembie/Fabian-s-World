@@ -1,5 +1,8 @@
 #ifndef CONTROLLER_H
 
+#include <iostream>
+#include <list>
+#include <map>
 
 #include "arma.h"
 #include "item.h"
@@ -7,9 +10,7 @@
 #include "pocion.h"
 
 
-#include <iostream>
-#include <list>
-#include <map>
+
 
 using std::cin;
 using std::cout;
@@ -19,9 +20,11 @@ using std::string;
 
 class Controller{
     private:
-
+		Jugador jugador;
     public:
         Controller();
+        Jugador getJugador();
+        list<int> encontrarLimites( int matrizNivel[10][14] );
         
 
 

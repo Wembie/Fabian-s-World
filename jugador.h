@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <list>
+#include <allegro.h>
 #include "item.h"
 using std::cin;
 using std::cout;
@@ -20,6 +21,8 @@ class Jugador{
         list< Item * > inventario;
     public:
         Jugador();
+        void moverJugador(BITMAP *, BITMAP *, int  , int , int  );
+        void teclas(BITMAP *, BITMAP *, int * , int * );
 };
 
 #endif // JUGADOR_H
