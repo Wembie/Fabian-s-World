@@ -14,6 +14,44 @@ void View::inicializarAllegro(){
  	set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 700, 0, 0);
 }
 
+void View::verificarLimites(list<int> listaLimites ,int * prohibidoArriba, int *  prohibidoAbajo, int *  prohibidoIzquierda, int *  prohibidoDerecha, int x, int y){
+	list<int>::iterator it2 = listaLimites.begin();
+	it2++;
+	for( list<int>::iterator it = listaLimites.begin(); it != listaLimites.end(); it++ , it2 ++ ){
+		
+      if(x+3 + 32 >= *it2 && x+3 + 32 <= *it2 + 50 && ( (y + 5 >= *it && y + 5 <= *it + 50) || (y + 35 >= *it && y + 35 <= *it + 50 )) ){
+      	*prohibidoDerecha = 1;
+	  }
+	  if(x-3  >= *it2 && x-3  <= *it2 + 50 && ( (y + 5 >= *it && y + 5 <= *it + 50) || (y + 35 >= *it && y + 35 <= *it + 50 )) ){
+	  *prohibidoIzquierda = 1;
+	  }
+	  if(y+3+40  >= *it && y+3+40  <= *it + 50 && ( (x + 5 >= *it2+1 && x + 5 <= *it2 + 49) || (x + 32 >= *it2+1 && x + 32 <= *it2 + 49 ))){
+	  	*prohibidoAbajo = 1;
+	  }
+	  if(y-3 >= *it && y-3  <= *it + 50 && ( (x + 5 >= *it2 && x + 5 <= *it2 + 50 ) || (x + 32 >= *it2 && x + 32 <= *it2 + 50 ))){
+	  	*prohibidoArriba = 1;
+	  }
+	  it++;
+	  it2++;
+	}
+}
+
+void View::ponerFondo(BITMAP * lobbyA, BITMAP * lobbyA2,BITMAP * lobbyB ,  BITMAP * lobbyB2, int fase, BITMAP * buffer){
+	if(fase == 1){
+	
+		blit( lobbyA, buffer,0 ,0 , 0, 0, 800, 700);
+	}
+	else if( fase == 2){
+		blit( lobbyA2, buffer,0 ,0 , 0, 0, 800, 700);
+	}
+	else if( fase == 3){
+		blit( lobbyB, buffer,0 ,0 , 0, 0, 800, 700);
+	}
+	else if( fase == 4){
+		blit( lobbyB2, buffer,0 ,0 , 0, 0, 800, 700);
+	}
+}
+
 void View::cicloPrincipal(){
  
  BITMAP *buffer = create_bitmap(800, 700);
@@ -23,16 +61,24 @@ void View::cicloPrincipal(){
  BITMAP * casa_b = load_bmp("fondoInicio2.bmp",NULL);		//FONDO DE START EN AMARILLO
  BITMAP *fondo;
  fondo = casa_a;
- BITMAP * lobbyA = load_bmp("Nivel1Abierto.bmp",NULL);
+ BITMAP * lobbyA = load_bmp("Nivel1Cerrado.bmp",NULL);
+ BITMAP * lobbyA2 = load_bmp("Nivel1Abierto.bmp", NULL);
+ BITMAP * lobbyB = load_bmp("Nivel2Cerrado.bmp", NULL);
+ BITMAP * lobbyB2 = load_bmp("Nivel2Abierto.bmp", NULL);
+ //MIDI * sonidoSi = load_midi("");
  bool salir, salir2;
  int x,y;
+ int prohibidoArriba, prohibidoAbajo, prohibidoIzquierda, prohibidoDerecha;
   
  // inicializar vbles
  x = 60; //posicion en el mapa de personaje
  y = 60;
  salir = false;
  salir2 = false;
+ int fase = 1;
+ //play_midi(sonidoSi, FALSE);
  while (!salir2){
+ 	
  	//clear_to_color(buffer, 0xaaaaaa);
  	
          if( mouse_x > 288 && mouse_x < 538 && mouse_y > 388 && mouse_y < 430 ){
@@ -54,23 +100,39 @@ void View::cicloPrincipal(){
         
  }
  
- int matrizNivel1[10][14]= {{0,1,0,0,0,0,0,1,0,0,0,1,0,0},
- 						    {0,1,1,1,1,1,0,0,0,1,0,0,0,1},
-						    {0,1,0,0,0,1,1,1,1,1,1,1,0,0},
-						    {0,1,0,1,0,1,0,0,0,1,0,0,0,1},
-						    {0,1,0,1,0,0,0,1,0,1,1,0,1,1},
-							{0,1,0,1,0,1,0,0,0,0,1,0,1,0},
-							{0,0,0,1,0,1,0,1,1,0,1,0,1,0},
-							{0,1,0,1,1,1,0,1,0,0,1,0,1,0},
-							{0,1,1,1,0,0,0,1,0,1,1,0,1,0},
-							{0,0,0,0,0,1,0,1,0,0,0,0,0,0}};
+ int matrizNivel1[10][14]= {{0, 1, 0 ,0 ,0 ,0 ,0 ,1 ,0 ,0 ,0 ,1 ,0 ,0},
+ 						    {0, 1, 1 ,1 ,1 ,1 ,0 ,0 ,0 ,1 ,0 ,0 ,0 ,1},
+						    {0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+						    {0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1},
+						    {0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1},
+							{0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0},
+							{0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0},
+							{0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0},
+							{0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0},
+							{0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0}};
+							
+int matrizNivel2[10][14] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+							{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+							{0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+							{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0},
+							{0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+							{0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+							{0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0},
+							{0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0},
+							{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1},
+							{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1}};
 list<int> listaLimites = controller.encontrarLimites(matrizNivel1);
  
  while ( !salir ){ 
-        blit( lobbyA, buffer,0 ,0 , 0, 0, 800, 700); 
+ 		prohibidoArriba = 0;
+ 		prohibidoAbajo = 0;
+ 		prohibidoIzquierda = 0;
+ 		prohibidoDerecha = 0;
+        ponerFondo(lobbyA, lobbyA2, lobbyB, lobbyB2, fase, buffer);
  		controller.getJugador().moverJugador(prota, buffer, x, y, 130);
- 		//por implementar :D
-        controller.getJugador().teclas(prota, buffer, &x, &y);
+ 		verificarLimites(listaLimites, &prohibidoArriba, &prohibidoAbajo, &prohibidoIzquierda, &prohibidoDerecha, x, y );
+        controller.getJugador().teclas(prota, buffer, &x, &y, prohibidoDerecha, prohibidoIzquierda, prohibidoAbajo, prohibidoArriba );
+        controller.verificarFase(x, y, &fase);//TO DO
           // teclas control usuario
           
 		  //Condional de entrada FALTA!      

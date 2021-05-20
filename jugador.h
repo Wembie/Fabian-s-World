@@ -22,7 +22,7 @@ class Jugador{
     public:
         Jugador();
         void moverJugador(BITMAP *, BITMAP *, int  , int , int  );
-        void teclas(BITMAP *, BITMAP *, int * , int * );
+        void teclas(BITMAP *, BITMAP *, int * , int *, int, int, int, int );
 };
 
 #endif // JUGADOR_H

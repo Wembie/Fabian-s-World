@@ -25,7 +25,7 @@ class Controller{
         Controller();
         Jugador getJugador();
         list<int> encontrarLimites( int matrizNivel[10][14] );
-        
+        void verificarFase(int x, int y, int * faseActual );
 
 
 };
