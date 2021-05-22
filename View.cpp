@@ -50,6 +50,9 @@ void View::ponerFondo(BITMAP * lobbyA, BITMAP * lobbyA2,BITMAP * lobbyB ,  BITMA
 	else if( fase == 4){
 		blit( lobbyB2, buffer,0 ,0 , 0, 0, 800, 700);
 	}
+	else{
+		blit( lobbyB2, buffer,0 ,0 , 0, 0, 800, 700);
+	}
 }
 
 void View::cicloPrincipal(){
@@ -65,6 +68,7 @@ void View::cicloPrincipal(){
  BITMAP * lobbyA2 = load_bmp("Nivel1Abierto.bmp", NULL);
  BITMAP * lobbyB = load_bmp("Nivel2Cerrado.bmp", NULL);
  BITMAP * lobbyB2 = load_bmp("Nivel2Abierto.bmp", NULL);
+ BITMAP * enemigoBase = load_bmp("personaje2.bmp" , NULL);
  //MIDI * sonidoSi = load_midi("");
  bool salir, salir2;
  int x,y;
@@ -100,39 +104,44 @@ void View::cicloPrincipal(){
         
  }
  
- int matrizNivel1[10][14]= {{0, 1, 0 ,0 ,0 ,0 ,0 ,1 ,0 ,0 ,0 ,1 ,0 ,0},
- 						    {0, 1, 1 ,1 ,1 ,1 ,0 ,0 ,0 ,1 ,0 ,0 ,0 ,1},
-						    {0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
-						    {0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1},
-						    {0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1},
-							{0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0},
-							{0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0},
+ int matrizNivel1[10][14]= {{0, 0, 0 ,0 ,2 ,0 ,2 ,1 ,0 ,2 ,0 ,1 ,0 ,0},
+ 						    {0, 1, 1 ,1 ,1 ,1 ,0 ,2 ,0 ,1 ,0 ,0 ,2 ,1},
+						    {0, 1, 0, 2, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+						    {2, 1, 0, 1, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1},
+						    {0, 1, 0, 1, 0, 2, 0, 1, 0, 1, 1, 0, 1, 1},
+							{0, 1, 2, 1, 0, 1, 0, 2, 0, 2, 1, 0, 1, 0},
+							{0, 2, 0, 1, 0, 1, 2, 1, 1, 0, 1, 2, 1, 0},
 							{0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0},
-							{0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0},
-							{0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0}};
+							{0, 1, 1, 1, 0, 2, 0, 1, 2, 1, 1, 0, 1, 0},
+							{0, 2, 0, 2, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0}};
 							
-int matrizNivel2[10][14] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+int matrizNivel2[10][14] = {{0, 0, 2, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 2},
 							{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-							{0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+							{2, 0, 0, 0, 2, 0, 2, 0, 2, 0, 0, 2, 1, 0},
 							{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0},
-							{0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
-							{0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-							{0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0},
-							{0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0},
-							{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1},
-							{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1}};
+							{2, 1, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 1, 2},
+							{0, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+							{0, 1, 0, 1, 2, 0, 2, 1, 0, 2, 0, 1, 1, 2},
+							{0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 0, 0, 0},
+							{2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 1},
+							{0, 0, 2, 0, 0, 2, 0, 0, 0, 2, 0, 0, 1, 1}};
 list<int> listaLimites = controller.encontrarLimites(matrizNivel1);
- 
+list<int> listaPosicionesEnemigos = controller.encontrarPosicionesEnemigos(matrizNivel1);
  while ( !salir ){ 
  		prohibidoArriba = 0;
  		prohibidoAbajo = 0;
  		prohibidoIzquierda = 0;
  		prohibidoDerecha = 0;
         ponerFondo(lobbyA, lobbyA2, lobbyB, lobbyB2, fase, buffer);
+        controller.getEnemigo().ponerEnemigo(enemigoBase, buffer, listaPosicionesEnemigos);
  		controller.getJugador().moverJugador(prota, buffer, x, y, 130);
  		verificarLimites(listaLimites, &prohibidoArriba, &prohibidoAbajo, &prohibidoIzquierda, &prohibidoDerecha, x, y );
         controller.getJugador().teclas(prota, buffer, &x, &y, prohibidoDerecha, prohibidoIzquierda, prohibidoAbajo, prohibidoArriba );
-        controller.verificarFase(x, y, &fase);//TO DO
+        controller.verificarFase(x, y, &fase);
+        if(fase == 3 ){
+        	listaLimites = controller.encontrarLimites(matrizNivel2);
+        	listaPosicionesEnemigos = controller.encontrarPosicionesEnemigos(matrizNivel2);
+		}
           // teclas control usuario
           
 		  //Condional de entrada FALTA!      
