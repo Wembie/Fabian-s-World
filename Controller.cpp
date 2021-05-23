@@ -39,23 +39,19 @@ list<int> Controller:: encontrarPosicionesEnemigos( int matrizNivel[10][14] ){
 	return listaEnemigos;
 }
 
-void Controller::verificarFase(int x, int y, int * faseActual ){
-	if(*faseActual == 1 && x >= 150 && x <= 200 && y >= 50 && y <= 100  ){
+void Controller::verificarFase(int * x, int * y, int * faseActual ){
+	if(*faseActual == 1 &&  *x >= 150 && *x <= 200 && *y >= 50 && *y <= 100  ){
 		*faseActual += 1;
 	}
-	else if(*faseActual == 2 && x >= 50 && x <= 100 && y >= 500 && y <= 550 ){
+	else if(*faseActual == 2 && *x >= 50 && *x <= 100 && *y >= 500 && *y <= 550 ){
+		*faseActual += 1;
+		*x = 52;
+		*y = 52;
+	}
+	else if(*faseActual == 3 && *x >= 150 && *x <= 200 && *y >= 150 && *y <= 200  ){
 		*faseActual += 1;
 	}
-	else if(*faseActual == 3 && x >= 150 && x <= 200 && y >= 150 && y <= 200  ){
-		
-		*faseActual += 1;
-	}
-	else if(*faseActual == 4 && x >= 50 && x <= 100 && y >= 150 && y <= 200  ){
+	else if(*faseActual == 4 && *x >= 50 && *x <= 100 && *y >= 150 && *y <= 200  ){
 		*faseActual += 1;
 	}
 }
-
-
-
-
-

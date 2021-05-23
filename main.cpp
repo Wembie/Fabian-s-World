@@ -6,14 +6,10 @@ using std::cin;
 using std::cout;
 using std::endl;
  
-
-int main() 
-{ 
+int main() { 
 	View view;
 	view.inicializarAllegro();
- 	view.cicloPrincipal();
- 
- return 0;
-
+    view.cicloPrincipal();
+    return 0;
 }
 END_OF_MAIN();

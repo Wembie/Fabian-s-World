@@ -18,35 +18,53 @@ void Jugador::teclas(BITMAP * prota, BITMAP * buffer, int * x, int * y, int proh
 	const int direccionAbajo = 130;
 	const int direccionIzquierda = 40;
 	const int direccionDerecha = 0;
-	if ( key[KEY_UP] && *y > 50 )
-          {
-          	moverJugador(prota, buffer, *x, *y, direccionArriba);
-          		if(prohibidoArriba != 1){
-				  
-               		*y-= 3;
-               }
-          }
-          if ( key[KEY_DOWN] && *y < 510  )
-          {
-          	moverJugador(prota, buffer, *x, *y, direccionAbajo);
-               if(prohibidoAbajo != 1){
-				  
-               		*y+= 3;
-               }
-          }
-          if ( key[KEY_LEFT] && *x > 50 )
-          {
+	int movio = 0;
+	int yaMostro = 0;
+	if ( key[KEY_LEFT] && *x > 50  ){
+        if(yaMostro != 1){
           	moverJugador(prota, buffer, *x, *y, direccionIzquierda);
-          	if(prohibidoIzquierda != 1){
-          		*x -= 3;
-			  }
-          }
-          if ( key[KEY_RIGHT]  && *x < 720  )
-          {
-          	moverJugador(prota, buffer, *x, *y, direccionDerecha);
+		}
+        if(prohibidoIzquierda != 1){
+          	*x -= 3;
+		}
+		movio = 1;
+		yaMostro = 1;
+        }
+        if ( key[KEY_RIGHT]  && *x < 720  ){
+          	if(yaMostro != 1){
+          		moverJugador(prota, buffer, *x, *y, direccionDerecha);
+			}
           	if( prohibidoDerecha != 1){
-			  
                *x+= 3;
 			}
-          }  
+		movio = 1;
+		yaMostro = 1;
+        } 
+        if(movio == 0){
+          	if(yaMostro != 1){
+          		moverJugador(prota, buffer, *x, *y, 130);
+			}	
+		}
+		if ( key[KEY_UP] && *y > 50 ){
+          	{
+          	if(yaMostro != 1){
+          		moverJugador(prota, buffer, *x, *y, direccionArriba);
+			}
+			}
+          	if(prohibidoArriba != 1){
+               	*y-= 3;
+            }
+        movio = 1;
+        yaMostro = 1;
+        }
+        if ( key[KEY_DOWN] && *y < 510  ){
+          	if(yaMostro != 1){
+          		moverJugador(prota, buffer, *x, *y, direccionAbajo);
+			}
+            if(prohibidoAbajo != 1){
+               	*y+= 3;
+            }
+        movio = 1;
+        yaMostro = 1;
+    	}	  
 }

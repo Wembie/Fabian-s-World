@@ -23,3 +23,4 @@ class Enemigo{
 };
 
 #endif // JUGADOR_H
+

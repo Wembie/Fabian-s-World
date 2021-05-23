@@ -9,10 +9,6 @@
 #include "jugador.h"
 #include "pocion.h"
 #include "enemigo.h"
-
-
-
-
 using std::cin;
 using std::cout;
 using std::endl;
@@ -23,18 +19,12 @@ class Controller{
     private:
 		Jugador jugador;
 		Enemigo enemigo;		
-		
     public:
         Controller();
         Jugador getJugador();
         Enemigo getEnemigo();
         list<int> encontrarLimites( int matrizNivel[10][14] );
-        void verificarFase(int x, int y, int * faseActual);
+        void verificarFase(int * x, int * y, int * faseActual);
         list<int> encontrarPosicionesEnemigos( int matrizNivel[10][14] );
-
-
 };
-
-
 #endif
-
