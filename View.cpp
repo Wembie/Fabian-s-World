@@ -18,23 +18,24 @@ void View::verificarInicioBatalla( list<int> listaPosicionesEnemigos, int x, int
 	it2++;
 	for( list<int>::iterator it = listaPosicionesEnemigos.begin(); it != listaPosicionesEnemigos.end(); it++ , it2 ++ ){
 		if(x+3 + 32 >= *it2 && x+3 + 32 <= *it2 + 50 && ( (y + 5 >= *it && y + 5 <= *it + 50) || (y + 35 >= *it && y + 35 <= *it + 50 )) ){
-			*xEnemigo = x + 43;
-			*yEnemigo = y + 5;
+			*xEnemigo = (*it-50)/50;
+			*yEnemigo = (*it2-50)/50;
 			*comienzaBatalla = 1;
+			return;
 		}
 		else if(x-3  >= *it2 && x-3  <= *it2 + 50 && ( (y + 5 >= *it && y + 5 <= *it + 50) || (y + 35 >= *it && y + 35 <= *it + 50 )) ){
-			*xEnemigo = x - 5;
-			*yEnemigo = y + 5;
+			*xEnemigo = (*it-50)/50;
+			*yEnemigo = (*it2-50)/50;
 			*comienzaBatalla = 1;
 		}
 		else if(y+3+40  >= *it && y+3+40  <= *it + 50 && ( (x + 5 >= *it2+1 && x + 5 <= *it2 + 49) || (x + 32 >= *it2+1 && x + 32 <= *it2 + 49 ))){
-			*xEnemigo = x + 4;
-			*yEnemigo = y - 4;
+			*xEnemigo = (*it-50)/50;
+			*yEnemigo = (*it2-50)/50;
 			*comienzaBatalla = 1;
 		}
 		else if(y-3 >= *it && y-3  <= *it + 50 && ( (x + 5 >= *it2 && x + 5 <= *it2 + 50 ) || (x + 32 >= *it2 && x + 32 <= *it2 + 50 ))){
-			*xEnemigo = x + 3;
-			*yEnemigo = y + 53;
+			*xEnemigo = (*it-50)/50;
+			*yEnemigo = (*it2-50)/50;
 			*comienzaBatalla = 1;
 		}
 		it++;
@@ -107,20 +108,6 @@ int View::cicloBatalla(BITMAP * buffer, BITMAP * fondoBatalla, BITMAP * enemigo,
 		if ( key[KEY_ESC] ) salirBatalla = 1;
 	}while(salirBatalla != 1);
 		
-}
-
-void borrarEnemigo( list<int> listaPosicionesEnemigos, int x, int y ){
-	// Por hacer, esa chingadera no sirve :c
-	list<int>::iterator it2 = listaPosicionesEnemigos.begin();
-	it2++;
-	for( list<int>::iterator it = listaPosicionesEnemigos.begin(); it != listaPosicionesEnemigos.end(); it++ , it2 ++ ){
-		if(x >= *it && x <= *it + 50 && y >= *it2 && y <= *it2 + 50  ){
-			listaPosicionesEnemigos.erase(it);
-			listaPosicionesEnemigos.erase(it2);
-		}
-		it++;
-		it2++;
-	}
 }
 
 
@@ -233,12 +220,22 @@ void View::cicloPrincipal(){
  		if( comienzaBatalla == 1 ){
  			
  				ganoBatalla = cicloBatalla ( buffer, fondoBatalla, enemigoEnBatalla1, cursor, numeros);
- 				if(ganoBatalla){
+ 				if(ganoBatalla == 1){
  					//celebra :D
- 					borrarEnemigo(listaPosicionesEnemigos, xEnemigoPixeles, yEnemigoPixeles );
+ 					if(fase == 1 || fase == 2){
+ 						matrizNivel1[xEnemigoPixeles][yEnemigoPixeles] = 0;
+ 						listaPosicionesEnemigos = controller.encontrarPosicionesEnemigos(matrizNivel1);
+					 }
+					 else{
+					 	matrizNivel2[xEnemigoPixeles][yEnemigoPixeles] = 0;
+					 	listaPosicionesEnemigos = controller.encontrarPosicionesEnemigos(matrizNivel2);
+					 }
+					 
+					 
  					
 				 }
 		 }
+		 comienzaBatalla = 0;
 		 
  		//Hacer lo de enemigo(arriba)
 		
