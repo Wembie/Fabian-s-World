@@ -13,6 +13,35 @@ void View::inicializarAllegro(){
 	set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 700, 0, 0);
 }
 
+void View::verificarInicioBatalla( list<int> listaPosicionesEnemigos, int x, int y, int *comienzaBatalla, int * xEnemigo, int * yEnemigo ){
+	list<int>::iterator it2 = listaPosicionesEnemigos.begin();
+	it2++;
+	for( list<int>::iterator it = listaPosicionesEnemigos.begin(); it != listaPosicionesEnemigos.end(); it++ , it2 ++ ){
+		if(x+3 + 32 >= *it2 && x+3 + 32 <= *it2 + 50 && ( (y + 5 >= *it && y + 5 <= *it + 50) || (y + 35 >= *it && y + 35 <= *it + 50 )) ){
+			*xEnemigo = x + 43;
+			*yEnemigo = y + 5;
+			*comienzaBatalla = 1;
+		}
+		else if(x-3  >= *it2 && x-3  <= *it2 + 50 && ( (y + 5 >= *it && y + 5 <= *it + 50) || (y + 35 >= *it && y + 35 <= *it + 50 )) ){
+			*xEnemigo = x - 5;
+			*yEnemigo = y + 5;
+			*comienzaBatalla = 1;
+		}
+		else if(y+3+40  >= *it && y+3+40  <= *it + 50 && ( (x + 5 >= *it2+1 && x + 5 <= *it2 + 49) || (x + 32 >= *it2+1 && x + 32 <= *it2 + 49 ))){
+			*xEnemigo = x + 4;
+			*yEnemigo = y - 4;
+			*comienzaBatalla = 1;
+		}
+		else if(y-3 >= *it && y-3  <= *it + 50 && ( (x + 5 >= *it2 && x + 5 <= *it2 + 50 ) || (x + 32 >= *it2 && x + 32 <= *it2 + 50 ))){
+			*xEnemigo = x + 3;
+			*yEnemigo = y + 53;
+			*comienzaBatalla = 1;
+		}
+		it++;
+		it2++;
+	}
+}
+
 void View::verificarLimites(list<int> listaLimites ,int * prohibidoArriba, int *  prohibidoAbajo, int *  prohibidoIzquierda, int *  prohibidoDerecha, int x, int y){
 	list<int>::iterator it2 = listaLimites.begin();
 	it2++;
@@ -52,6 +81,49 @@ void View::ponerFondo(BITMAP * lobbyA, BITMAP * lobbyA2,BITMAP * lobbyB ,  BITMA
 	}
 }
 
+
+int View::cicloBatalla(BITMAP * buffer, BITMAP * fondoBatalla, BITMAP * enemigo, BITMAP * cursor, BITMAP *  numeros  ){
+	int salirBatalla = 0;
+	Enemigo enemigoBatalla("WembiePeque", 50, 3, 5 );
+	do{
+		if( mouse_x > 14 && mouse_x < 196 && mouse_y > 494  && mouse_y < 531 ){
+ 		  	if( mouse_b & 1  ){ //que diï¿½ click
+ 		  		enemigoBatalla.setVida(enemigoBatalla.getVida() - (controller.getJugador().getAtaque() - enemigoBatalla.getResistencia()));
+			}
+		}
+		blit( fondoBatalla, buffer,0 ,0 , 0, 0, 800, 700);
+		masked_blit(enemigo, buffer, 1, 1, 0, 0, 372, 300 ); 
+		controller.mostrarDatosPersonaje(numeros, buffer);
+		controller.mostrarDatosEnemigo( numeros, buffer, enemigoBatalla );
+		masked_blit(cursor, buffer, 0, 0, mouse_x, mouse_y, 13, 22 ); 
+		blit(buffer, screen, 0, 0, 0, 0, 800, 700);
+		rest(50);//hecharle un ojo
+		if(enemigoBatalla.getVida() <= 0){
+			return 1; //que ganó :D
+		}
+		else if(controller.getJugador().getVida() <= 0){
+			return 0; //que perdió :(
+		}
+		if ( key[KEY_ESC] ) salirBatalla = 1;
+	}while(salirBatalla != 1);
+		
+}
+
+void borrarEnemigo( list<int> listaPosicionesEnemigos, int x, int y ){
+	// Por hacer, esa chingadera no sirve :c
+	list<int>::iterator it2 = listaPosicionesEnemigos.begin();
+	it2++;
+	for( list<int>::iterator it = listaPosicionesEnemigos.begin(); it != listaPosicionesEnemigos.end(); it++ , it2 ++ ){
+		if(x >= *it && x <= *it + 50 && y >= *it2 && y <= *it2 + 50  ){
+			listaPosicionesEnemigos.erase(it);
+			listaPosicionesEnemigos.erase(it2);
+		}
+		it++;
+		it2++;
+	}
+}
+
+
 void View::cicloPrincipal(){
 	BITMAP *buffer = create_bitmap(800, 700);
 	BITMAP *prota  = load_bmp("personaje.bmp",NULL);
@@ -65,23 +137,33 @@ void View::cicloPrincipal(){
 	BITMAP * lobbyB = load_bmp("nivel2Cerrado.bmp", NULL);
 	BITMAP * lobbyB2 = load_bmp("nivel2Abierto.bmp", NULL);
 	BITMAP * enemigoBase = load_bmp("enemigoNivel1.bmp" , NULL);
+	BITMAP * enemigoEnBatalla1 = load_bmp("enemigoEnBatallaNivel1.bmp" , NULL);
+	BITMAP * numeros = load_bmp("numeros.bmp" , NULL);
+	
+	
+	BITMAP * fondoBatalla = load_bmp("batallaNivel1.bmp" , NULL);
+	BITMAP * prueba2 = load_bmp("espacio.bmp" , NULL);
+	
 	FONT * font = load_font("a.pcx", NULL, NULL);
 	MIDI * sonidoSi = load_midi("musicaFondo.mid");
 	bool salir, salir2;
 	int x,y;
 	int prohibidoArriba, prohibidoAbajo, prohibidoIzquierda, prohibidoDerecha;
+	int comienzaBatalla;
 	// inicializar vbles
 	x = 60; //posicion en el mapa de personaje
 	y = 60;
 	salir = false;
 	salir2 = false;
 	int fase = 1;
+	int faseEnemigo = 1;
 	if(install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, "") != 0){
 		cout << ":D";
 	}
 	else{
 		play_midi(sonidoSi, FALSE);
 	}
+	
 	while (!salir2){
  	//clear_to_color(buffer, 0xaaaaaa);
  	//textout_ex(buffer, font, "sonido si :3", 50, 50, makecol(255, 0, 0), -1);
@@ -103,7 +185,7 @@ void View::cicloPrincipal(){
 	int matrizNivel1[10][14]= {{0, 0, 0 ,0 ,2 ,0 ,2 ,1 ,0 ,2 ,0 ,1 ,0 ,0},
 								{0, 1, 1 ,1 ,1 ,1 ,0 ,2 ,0 ,1 ,0 ,0 ,2 ,1},
 								{0, 1, 0, 2, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
-								{2, 1, 0, 1, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1},
+								{0, 1, 0, 1, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1},
 								{0, 1, 0, 1, 0, 2, 0, 1, 0, 1, 1, 0, 1, 1},
 								{0, 1, 2, 1, 0, 1, 0, 2, 0, 2, 1, 0, 1, 0},
 								{0, 2, 0, 1, 0, 1, 2, 1, 1, 0, 1, 2, 1, 0},
@@ -121,15 +203,22 @@ void View::cicloPrincipal(){
 								{0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 0, 0, 0},
 								{2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 1},
 								{0, 0, 2, 0, 0, 2, 0, 0, 0, 2, 0, 0, 1, 1}};
+	int ganoBatalla;
+	int xEnemigoPixeles;
+	int yEnemigoPixeles;
 	list<int> listaLimites = controller.encontrarLimites(matrizNivel1);
 	list<int> listaPosicionesEnemigos = controller.encontrarPosicionesEnemigos(matrizNivel1);
 	while ( !salir ){ 
+	
+		if ( key[KEY_ESC] ) salir = true;
  		prohibidoArriba = 0;
  		prohibidoAbajo = 0;
  		prohibidoIzquierda = 0;
  		prohibidoDerecha = 0;
         ponerFondo(lobbyA, lobbyA2, lobbyB, lobbyB2, fase, buffer);
         controller.getEnemigo().ponerEnemigo(enemigoBase, buffer, listaPosicionesEnemigos);
+        controller.mostrarDatosPersonaje(numeros, buffer);
+        
  		verificarLimites(listaLimites, &prohibidoArriba, &prohibidoAbajo, &prohibidoIzquierda, &prohibidoDerecha, x, y );
         controller.getJugador().teclas(prota, buffer, &x, &y, prohibidoDerecha, prohibidoIzquierda, prohibidoAbajo, prohibidoArriba );
         controller.verificarFase(&x, &y, &fase);
@@ -137,12 +226,29 @@ void View::cicloPrincipal(){
         	listaLimites = controller.encontrarLimites(matrizNivel2);
         	listaPosicionesEnemigos = controller.encontrarPosicionesEnemigos(matrizNivel2);
 		}
+		//controller verificar fase para batalla
+		
+		
+		verificarInicioBatalla(listaPosicionesEnemigos, x, y, &comienzaBatalla, &xEnemigoPixeles, &yEnemigoPixeles );
+ 		if( comienzaBatalla == 1 ){
+ 			
+ 				ganoBatalla = cicloBatalla ( buffer, fondoBatalla, enemigoEnBatalla1, cursor, numeros);
+ 				if(ganoBatalla){
+ 					//celebra :D
+ 					borrarEnemigo(listaPosicionesEnemigos, xEnemigoPixeles, yEnemigoPixeles );
+ 					
+				 }
+		 }
+		 
+ 		//Hacer lo de enemigo(arriba)
+		
+	
         // limites
         if ( x < 0 ) x = 0;
         if ( x > 800 ) x = 800;
         if ( y < 0 ) y = 0;
         if ( y > 600 ) y = 600;          
-       masked_blit(cursor, buffer, 0, 0, mouse_x, mouse_y, 13, 22 ); //borrar
+       masked_blit(cursor, buffer, 0, 0, mouse_x, mouse_y, 13, 22 ); 
        blit(buffer, screen, 0, 0, 0, 0, 800, 700);
        rest(10);
        // tecla de salida

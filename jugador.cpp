@@ -1,11 +1,8 @@
 #include "jugador.h"
 const int Jugador :: MAX_ITEMS = 10;
 
-Jugador :: Jugador(){
-    this->nombre = "ItsFabian195";
-    this->vida = 200;
-    this->ataque = 10;
-    this->resistencia = 0;
+Jugador :: Jugador() : Personaje( "ItsFabian195", 200, 10, 0 ){
+    this->mana = 100;
     //Inventario Iniciado VACIO
 }
 
@@ -67,4 +64,12 @@ void Jugador::teclas(BITMAP * prota, BITMAP * buffer, int * x, int * y, int proh
         movio = 1;
         yaMostro = 1;
     	}	  
+}
+
+int Jugador::getMana(){
+	return this->mana;
+}
+
+void Jugador::setMana( int mana ){
+	this->mana = mana;
 }

@@ -1,9 +1,13 @@
 #include "enemigo.h"
 
-Enemigo :: Enemigo(){
-    this->vida = 100;
-    this->ataque = 10;
-    this->resistencia = 0;
+Enemigo :: Enemigo() : Personaje(){
+}
+
+Enemigo :: Enemigo( string nombre, int vida, int ataque, int resistencia ) : Personaje( nombre, vida, ataque, resistencia ){
+	this->nombre = nombre;
+	this->vida = vida;
+	this->ataque = ataque;
+	this->resistencia = resistencia;
 }
 
 void Enemigo::ponerEnemigo( BITMAP * enemigoBase, BITMAP * buffer, list<int>listaPosicioneEnemigos){
@@ -16,3 +20,5 @@ void Enemigo::ponerEnemigo( BITMAP * enemigoBase, BITMAP * buffer, list<int>list
 	  it2++;
 	}	
 }
+
+
