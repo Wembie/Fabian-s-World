@@ -11,11 +11,12 @@ using std::cout;
 using std::endl; 
 using std::string;
 
+
 class Pocion : public Item{
     private:
-        //
+    	int cantidadDeAumento;
     public:
-        Pocion( string, string );
+        Pocion( Tipo, BITMAP * , int );
 };
 
 #endif // POCION_H

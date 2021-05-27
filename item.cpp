@@ -1,6 +1,10 @@
 #include "item.h"
 
-Item :: Item( string nombre, string descripcion ){
-    this->nombre = nombre;
-    this->descripcion = descripcion;
+Item :: Item( Tipo tipo, BITMAP *  texturaItem ){
+    this->tipo = tipo;
+    this->texturaItem = texturaItem;
+}
+
+void Item::mostrarItem( int x, int y, BITMAP * buffer ){
+	masked_blit(texturaItem, buffer, 0, 0, x, y, 28,28);
 }

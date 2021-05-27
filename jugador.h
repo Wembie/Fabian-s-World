@@ -6,6 +6,8 @@
 #include <allegro.h>
 #include "item.h"
 #include "personaje.h"
+#include "arma.h"
+#include "pocion.h"
 
 using std::cin;
 using std::cout;
@@ -24,6 +26,9 @@ class Jugador : public Personaje{
         void teclas(BITMAP *, BITMAP *, int * , int *, int, int, int, int );
         int getMana();
         void setMana( int mana );
+        void agregarItem( int );
+        list<Item *> getInventario();
+        void setInventario( list<Item *> inventario );
 };
 
 #endif // JUGADOR_H

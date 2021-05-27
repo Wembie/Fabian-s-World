@@ -56,7 +56,7 @@ void Controller::verificarFase(int * x, int * y, int * faseActual ){
 	else if(*faseActual == 3 && *x >= 150 && *x <= 200 && *y >= 150 && *y <= 200  ){
 		*faseActual += 1;
 	}
-	else if(*faseActual == 4 && *x >= 50 && *x <= 100 && *y >= 150 && *y <= 200  ){
+	else if(*faseActual == 4 && *x >= 50 && *x <= 100 && *y >= 500 && *y <= 550  ){
 		*faseActual += 1;
 	}
 }
@@ -104,4 +104,44 @@ void Controller :: mostrarDatosEnemigo(BITMAP * numeros, BITMAP * buffer, Enemig
 	mostrarNumero(enemigoBatalla.getAtaque(), numeros, 450, 145, buffer);
 }
 
+void Controller::cambiarVidaJugador( Enemigo enemigoBatalla ){
+	jugador.setVida( jugador.getVida() - (enemigoBatalla.getAtaque() - jugador.getResistencia()) );
+}
 
+void Controller::reiniciarVida( ){
+	jugador.setVida( 200 );
+}
+
+void Controller::darItemAleatorio(){
+	int numeroAleatorio;
+	srand(time(NULL));
+	numeroAleatorio =  rand()%8;
+	if(jugador.getInventario().size() <= 9){
+		jugador.agregarItem( numeroAleatorio );
+	}
+	
+}
+
+void Controller::mostrarInventario( BITMAP * buffer ){
+	int i = 0, j = 0;
+	list<Item*> inventarioJugador =  jugador.getInventario();
+	for(list<Item *>::iterator it = inventarioJugador.begin(); it != inventarioJugador.end(); it++ ){
+		
+		Item * item = *it;
+		item->mostrarItem( 589 + i, 606 + j, buffer );
+		i += 35;
+		if(i/35 >= 5){
+			
+			j = 50;
+		}
+		if(i/35 == 5){
+			i = 0;
+		}
+	}
+	
+}
+
+void Controller::vaciarInventario(){
+	list< Item * > inventarioVacio;
+	jugador.setInventario( inventarioVacio  );
+}

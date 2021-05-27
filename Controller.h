@@ -3,6 +3,8 @@
 #include <iostream>
 #include <list>
 #include <map>
+#include<cstdlib>
+#include<ctime>
 
 #include "arma.h"
 #include "item.h"
@@ -24,7 +26,7 @@ class Controller{
 		Personaje personaje;		
     public:
         Controller();
-        Jugador getJugador();
+        Jugador getJugador( );
         Enemigo getEnemigo();
         list<int> encontrarLimites( int matrizNivel[10][14] );
         void verificarFase(int * x, int * y, int * faseActual);
@@ -34,6 +36,11 @@ class Controller{
         void mostrarNumero(int , BITMAP * , int , int , BITMAP *);
         void mostrarDatosPersonaje(BITMAP *, BITMAP *);
         void mostrarDatosEnemigo(BITMAP *, BITMAP *, Enemigo);
+        void cambiarVidaJugador(Enemigo);
+        void reiniciarVida();
+        void darItemAleatorio();
+        void mostrarInventario( BITMAP * buffer );
+        void vaciarInventario();
         
 };
 #endif

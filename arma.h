@@ -11,15 +11,12 @@ using std::cout;
 using std::endl; 
 using std::string;
 
-enum Tipo{ ESPADA, ARCO, LANZA };
-
 class Arma : public Item{
     private:
-        Tipo tipo;
-        float puntosAtaque;
+        int puntosAtaque;
         int durabilidad; //O resistencia
     public:
-        Arma( string, string, Tipo, float, int );
+        Arma( Tipo , BITMAP * , int , int );
 };
 
 #endif // ARMA_H
