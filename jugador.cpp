@@ -1,7 +1,6 @@
 #include "jugador.h"
-const int Jugador :: MAX_ITEMS = 10;
 
-Jugador :: Jugador() : Personaje( "ItsFabian195", 200, 10, 0 ){
+Jugador :: Jugador() : Personaje( "ItsFabian195", 200, 5, 0 ){
     this->mana = 100;
     //Inventario Iniciado VACIO
 }
@@ -80,19 +79,19 @@ void Jugador::agregarItem( int numeroAleatorio ){
 		switch(tipo){
 			case ESPADA:{
 				BITMAP * textura  = load_bmp("espada.bmp",NULL);
-				Arma * arma = new Arma( tipo, textura , 15, 3  );
+				Arma * arma = new Arma( tipo, textura , 25, 3  );
 				inventario.push_back( arma );
 				break;
 				}
 			case ARCO:{
 				BITMAP * textura  = load_bmp("arco.bmp",NULL);
-				Arma * arma = new Arma( tipo, textura, 5, 15  );
+				Arma * arma = new Arma( tipo, textura, 7, 15  );
 				inventario.push_back( arma );
 				break;
 			}
 			case LANZA:{
 				BITMAP * textura  = load_bmp("lanza.bmp",NULL);
-				Arma * arma = new Arma( tipo, textura, 6, 13  );
+				Arma * arma = new Arma( tipo, textura, 9, 13  );
 				inventario.push_back( arma );
 				break;
 			}
@@ -135,9 +134,7 @@ void Jugador::agregarItem( int numeroAleatorio ){
 			}
 		}
 		
-	}
-
-	
+	}	
 }
 
 list <Item *> Jugador::getInventario(){

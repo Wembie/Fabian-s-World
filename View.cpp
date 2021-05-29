@@ -82,24 +82,59 @@ void View::ponerFondo(BITMAP * lobbyA, BITMAP * lobbyA2,BITMAP * lobbyB ,  BITMA
 	}
 }
 
-
-int View::cicloBatalla(BITMAP * buffer, BITMAP * fondoBatalla, BITMAP * enemigo, BITMAP * cursor, BITMAP *  numeros  ){
+int View::cicloBatalla(BITMAP * buffer, BITMAP * fondoBatalla, BITMAP * enemigo, BITMAP * cursor, BITMAP *  numeros, BITMAP * numeritos, int fase ){
 	int salirBatalla = 0;
-	Enemigo enemigoBatalla("WembiePeque", 50, 2, 5 );
+	Enemigo enemigoBatalla;
+	if(fase == 1 || fase == 2){
+		enemigoBatalla = Enemigo("WembiePeque", 50, 2, 2 );
+	}
+	else{
+		enemigoBatalla = Enemigo("WembieMediano", 100, 5, 4 );
+	}
+	
 	do{
-		if( mouse_x > 14 && mouse_x < 196 && mouse_y > 494  && mouse_y < 531 ){
+		controller.usarInventario( &enemigoBatalla );
+		if( mouse_x > 14 && mouse_x < 196 && mouse_y > 494  && mouse_y < 531 ){ //Boton Atacar
  		  	if( mouse_b & 1  ){ //que di� click
- 		  		enemigoBatalla.setVida(enemigoBatalla.getVida() - (controller.getJugador().getAtaque() - enemigoBatalla.getResistencia()));
-				   do{
+ 		  		if(controller.getJugador().getAtaque() >= enemigoBatalla.getResistencia() ){
+ 		  			enemigoBatalla.setVida(enemigoBatalla.getVida() - (controller.getJugador().getAtaque() - enemigoBatalla.getResistencia()));
+				   }
+ 		  		
+				do{
  		  			//para que el click sostenido no haga prrrrrrrrrrr
-				}while(mouse_b & 1  );
+				}while( mouse_b & 1  );
 				controller.cambiarVidaJugador( enemigoBatalla );
 			}
 		}
+		//HABILIDADES
+		else if( mouse_x > 216 && mouse_x < 313 && mouse_y > 494  && mouse_y < 531 ){ //Boton Fuego
+			if( mouse_b & 1  ){
+				if( controller.getJugador().getMana() > 0 && ( controller.getJugador().getMana() - 25 ) >= 0 ){
+					enemigoBatalla.setVida(enemigoBatalla.getVida() - ( 30 - enemigoBatalla.getResistencia()));
+					do{
+ 		  			//para que el click sostenido no haga prrrrrrrrrrr
+					}while( mouse_b & 1  );
+					controller.cambiarMana( 25 );
+				}
+				
+			}
+		}
+		else if( mouse_x > 216 && mouse_x < 313 && mouse_y > 552 && mouse_y < 589 ){ //Boton UTIL
+			if( mouse_b & 1  ){
+				if( controller.getJugador().getMana() > 0 && ( controller.getJugador().getMana() - 75 ) >= 0 ){	
+					enemigoBatalla.setVida(enemigoBatalla.getVida() - ( 100 - enemigoBatalla.getResistencia()));
+					do{
+ 		  			//para que el click sostenido no haga prrrrrrrrrrr
+					}while( mouse_b & 1  );
+					controller.cambiarMana( 75 );
+				}
+			}
+		}		
 		blit( fondoBatalla, buffer,0 ,0 , 0, 0, 800, 700);
 		masked_blit(enemigo, buffer, 1, 1, 0, 0, 372, 300 ); 
 		controller.mostrarDatosPersonaje(numeros, buffer);
 		controller.mostrarDatosEnemigo( numeros, buffer, enemigoBatalla );
+		controller.mostrarInventario(buffer, numeritos);
 		masked_blit(cursor, buffer, 0, 0, mouse_x, mouse_y, 13, 22 ); 
 		blit(buffer, screen, 0, 0, 0, 0, 800, 700);
 		if(enemigoBatalla.getVida() <= 0){
@@ -128,8 +163,11 @@ void View::cicloPrincipal(){
 	BITMAP * lobbyB2 = load_bmp("nivel2Abierto.bmp", NULL);
 	BITMAP * enemigoBase = load_bmp("enemigoNivel1.bmp" , NULL);
 	BITMAP * enemigoEnBatalla1 = load_bmp("enemigoEnBatallaNivel1.bmp" , NULL);
+	BITMAP * enemigoBase2 = load_bmp("enemigoNivel2.bmp" , NULL);
+	BITMAP * enemigoEnBatalla2 = load_bmp("enemigoEnBatallaNivel2.bmp" , NULL);
 	BITMAP * numeros = load_bmp("numeros.bmp" , NULL);
 	BITMAP * pantallaWin = load_bmp("pantallaWin.bmp", NULL);
+	BITMAP * numeritos = load_bmp("numeritos.bmp", NULL);
 	
 	
 	BITMAP * fondoBatalla = load_bmp("batallaNivel1.bmp" , NULL);
@@ -156,8 +194,6 @@ void View::cicloPrincipal(){
 	}
 	
 	while (!salir2){
- 	//clear_to_color(buffer, 0xaaaaaa);
- 	//textout_ex(buffer, font, "sonido si :3", 50, 50, makecol(255, 0, 0), -1);
         if( mouse_x > 288 && mouse_x < 538 && mouse_y > 388 && mouse_y < 430 ){
  		  	blit( casa_b, buffer, 0, 0, 0, 0, 800, 700 ); //poner imagen
  		  	if( mouse_b & 1  ){ //que di� click
@@ -173,7 +209,7 @@ void View::cicloPrincipal(){
         if ( key[KEY_ESC] ) salir2 = true;
         blit( buffer, screen, 0, 0, 0, 0, 800, 700 ); //actualiza pantalla    
 	}
-	int matrizNivel1[10][14]= {{0, 0, 0 ,0 ,2 ,0 ,2 ,1 ,0 ,2 ,0 ,1 ,0 ,0},
+	int matrizNivel1[10][14]=  {{0, 0, 0 ,0 ,2 ,0 ,2 ,1 ,0 ,2 ,0 ,1 ,0 ,0},
 								{0, 1, 1 ,1 ,1 ,1 ,0 ,2 ,0 ,1 ,0 ,0 ,2 ,1},
 								{0, 1, 0, 2, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
 								{0, 1, 0, 1, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1},
@@ -207,9 +243,14 @@ void View::cicloPrincipal(){
  		prohibidoIzquierda = 0;
  		prohibidoDerecha = 0;
         ponerFondo(lobbyA, lobbyA2, lobbyB, lobbyB2, fase, buffer);
-        controller.getEnemigo().ponerEnemigo(enemigoBase, buffer, listaPosicionesEnemigos);
+        if(fase == 1 || fase == 2){
+        	controller.getEnemigo().ponerEnemigo(enemigoBase, buffer, listaPosicionesEnemigos);
+		}
+        else{
+        	controller.getEnemigo().ponerEnemigo(enemigoBase2, buffer, listaPosicionesEnemigos);
+		}
         controller.mostrarDatosPersonaje(numeros, buffer);
-        controller.mostrarInventario(buffer);
+        controller.mostrarInventario(buffer, numeritos);
         
  		verificarLimites(listaLimites, &prohibidoArriba, &prohibidoAbajo, &prohibidoIzquierda, &prohibidoDerecha, x, y );
         controller.getJugador().teclas(prota, buffer, &x, &y, prohibidoDerecha, prohibidoIzquierda, prohibidoAbajo, prohibidoArriba );
@@ -229,8 +270,12 @@ void View::cicloPrincipal(){
 		
 		verificarInicioBatalla(listaPosicionesEnemigos, x, y, &comienzaBatalla, &xEnemigoPixeles, &yEnemigoPixeles );
  		if( comienzaBatalla == 1 ){
- 			
- 				ganoBatalla = cicloBatalla ( buffer, fondoBatalla, enemigoEnBatalla1, cursor, numeros);
+ 				if (fase == 1 || fase == 2){
+ 					ganoBatalla = cicloBatalla ( buffer, fondoBatalla, enemigoEnBatalla1, cursor, numeros, numeritos, fase);
+				 }
+ 				else{
+ 					ganoBatalla = cicloBatalla ( buffer, fondoBatalla, enemigoEnBatalla2, cursor, numeros, numeritos, fase);
+				 }
  				if(ganoBatalla == 1){
  					//celebra :D
  					if(fase == 1 || fase == 2){
@@ -241,10 +286,7 @@ void View::cicloPrincipal(){
 					 	matrizNivel2[xEnemigoPixeles][yEnemigoPixeles] = 0;
 					 	listaPosicionesEnemigos = controller.encontrarPosicionesEnemigos(matrizNivel2);
 					 }
-					 controller.darItemAleatorio();
-					 
-					 
- 					
+					 controller.darItemAleatorio();				
 				 }
 				 else{
 				 	x = 55;
@@ -254,18 +296,18 @@ void View::cicloPrincipal(){
 				 }
 		 }
 		 comienzaBatalla = 0;
-		 
- 		//Hacer lo de enemigo(arriba)
+ 		//Hacer lo de enemigo(arriba) ?
 		
 	
         // limites
         if ( x < 0 ) x = 0;
         if ( x > 800 ) x = 800;
         if ( y < 0 ) y = 0;
-        if ( y > 600 ) y = 600;          
-       masked_blit(cursor, buffer, 0, 0, mouse_x, mouse_y, 13, 22 ); 
-       blit(buffer, screen, 0, 0, 0, 0, 800, 700);
-       rest(10);
+        if ( y > 600 ) y = 600;  
+		        
+        masked_blit(cursor, buffer, 0, 0, mouse_x, mouse_y, 13, 22 ); 
+        blit(buffer, screen, 0, 0, 0, 0, 800, 700);
+        rest(10);
        // tecla de salida
     }  
 	destroy_bitmap(prota);

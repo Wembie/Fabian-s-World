@@ -25,7 +25,7 @@ public:
     void verificarLimites(list <int> ,int *, int *,  int *,  int *, int, int);
     void ponerFondo(BITMAP * lobbyA, BITMAP * lobbyA2,BITMAP * lobbyB ,  BITMAP * lobbyB2, int fase, BITMAP * buffer);
     void verificarInicioBatalla( list <int>, int, int, int *, int *, int * );
-    int cicloBatalla( BITMAP * buffer, BITMAP * fondoBatalla, BITMAP * enemigo, BITMAP * cursor, BITMAP * numeros   );
+    int cicloBatalla( BITMAP * buffer, BITMAP * fondoBatalla, BITMAP * enemigo, BITMAP * cursor, BITMAP * numeros, BITMAP * numeritos, int fase );
 };
 
 #endif //VIEW_H

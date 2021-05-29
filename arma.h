@@ -17,6 +17,10 @@ class Arma : public Item{
         int durabilidad; //O resistencia
     public:
         Arma( Tipo , BITMAP * , int , int );
+        void mostrarItem( int x, int y, BITMAP * buffer );
+        int getPuntosAtaque();
+        int getDurabilidad();
+        void setDurabilidad( int );
 };
 
 #endif // ARMA_H

@@ -34,13 +34,15 @@ class Controller{
         Personaje getPersonaje();
         void verificarFaseBatalla(int * x, int * y, int * faseActualBatalla);
         void mostrarNumero(int , BITMAP * , int , int , BITMAP *);
+        void mostrarNumeroPequenio(int , BITMAP * , int , int , BITMAP *);
         void mostrarDatosPersonaje(BITMAP *, BITMAP *);
         void mostrarDatosEnemigo(BITMAP *, BITMAP *, Enemigo);
         void cambiarVidaJugador(Enemigo);
         void reiniciarVida();
         void darItemAleatorio();
-        void mostrarInventario( BITMAP * buffer );
+        void mostrarInventario( BITMAP * buffer, BITMAP * numeritos );
         void vaciarInventario();
-        
+        void cambiarMana( int );
+        void usarInventario( Enemigo * enemigoBatalla );
 };
 #endif

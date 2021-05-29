@@ -18,7 +18,6 @@ using std::list;
 class Jugador : public Personaje{
     private:
         int mana;
-        const static int MAX_ITEMS;
         list< Item * > inventario;
     public:
         Jugador();

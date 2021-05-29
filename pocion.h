@@ -17,6 +17,9 @@ class Pocion : public Item{
     	int cantidadDeAumento;
     public:
         Pocion( Tipo, BITMAP * , int );
+		void mostrarItem( int x, int y, BITMAP * buffer );
+        int getCantidadDeAumento();
+        
 };
 
 #endif // POCION_H

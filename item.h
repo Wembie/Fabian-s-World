@@ -15,10 +15,12 @@ enum Tipo{ESPADA, ARCO, LANZA, POCION_VIDA,POCION_RESISTENCIA, POCION_ATAQUE, PO
 class Item{
     private:
         Tipo tipo;
+    protected:
         BITMAP * texturaItem;
     public:
         Item( Tipo, BITMAP * );
-        void mostrarItem( int x, int y, BITMAP * buffer );
+        virtual void mostrarItem( int x, int y, BITMAP * buffer );
+        Tipo getTipo();
 };
 
 #endif // ITEM_H
