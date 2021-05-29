@@ -1,0 +1,52 @@
+# Project: Proyecto 2
+# Makefile created by Dev-C++ 5.11
+
+CPP      = g++.exe -D__DEBUG__
+CC       = gcc.exe -D__DEBUG__
+WINDRES  = windres.exe
+OBJ      = main.o arma.o item.o jugador.o pocion.o Controller.o View.o enemigo.o personaje.o
+LINKOBJ  = main.o arma.o item.o jugador.o pocion.o Controller.o View.o enemigo.o personaje.o
+LIBS     = -L"C:/Dev-Cpp/lib" -L"C:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib32" -static-libgcc -lm -lalleg -mwindows -lalleg -m32 -g3
+INCS     = -I"C:/Dev-Cpp/MinGW64/include" -I"C:/Dev-Cpp/include" -I"C:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
+CXXINCS  = -I"C:/Dev-Cpp/MinGW64/include" -I"C:/Dev-Cpp/include" -I"C:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
+BIN      = "Proyecto 2.exe"
+CXXFLAGS = $(CXXINCS) -m32 -g3
+CFLAGS   = $(INCS) -m32 -g3
+RM       = rm.exe -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+main.o: main.cpp
+	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
+
+arma.o: arma.cpp
+	$(CPP) -c arma.cpp -o arma.o $(CXXFLAGS)
+
+item.o: item.cpp
+	$(CPP) -c item.cpp -o item.o $(CXXFLAGS)
+
+jugador.o: jugador.cpp
+	$(CPP) -c jugador.cpp -o jugador.o $(CXXFLAGS)
+
+pocion.o: pocion.cpp
+	$(CPP) -c pocion.cpp -o pocion.o $(CXXFLAGS)
+
+Controller.o: Controller.cpp
+	$(CPP) -c Controller.cpp -o Controller.o $(CXXFLAGS)
+
+View.o: View.cpp
+	$(CPP) -c View.cpp -o View.o $(CXXFLAGS)
+
+enemigo.o: enemigo.cpp
+	$(CPP) -c enemigo.cpp -o enemigo.o $(CXXFLAGS)
+
+personaje.o: personaje.cpp
+	$(CPP) -c personaje.cpp -o personaje.o $(CXXFLAGS)
