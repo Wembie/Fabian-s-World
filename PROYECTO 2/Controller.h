@@ -18,11 +18,13 @@ using std::cout;
 using std::endl;
 using std::list;
 using std::string;
-
+/*
+Se crea la clase Controller, donde de atributos esta un atributo de tipo Jugador, Enemigo y Personaje, con sus respetivos metodos
+*/
 class Controller{
     private:
 		Jugador jugador;
-		Enemigo enemigo;
+		Enemigo enemigo; //Estos son los enemigos que se ponene en el mapa, no con los que pelea
 		Personaje personaje;		
     public:
         Controller();

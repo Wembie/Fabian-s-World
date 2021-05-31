@@ -1,21 +1,21 @@
 #include "Controller.h"
+/*Se crea el constructor por defecto*/
 Controller :: Controller(){
 
 }
-
+//Funcion para traer el jugador
 Jugador Controller::getJugador(){
 	return this->jugador;
 }
-
+//Funcion para traer el enemigo
 Enemigo Controller::getEnemigo(){
 	return this->enemigo;
 }
-
+//Funcion para traer el personaje
 Personaje Controller::getPersonaje(){
 	return this->personaje;
 }
-
-
+//Funcion de tipo Lista que lo que hacer es recorrer la matriz del nivel y ver donde esta el enemigo, y lo guarda en la lista de limitesProhibidos
 list<int> Controller:: encontrarLimites( int matrizNivel[10][14] ){
 	int i, j;
 	list <int> listaLimitesProhibidos;
@@ -30,6 +30,7 @@ list<int> Controller:: encontrarLimites( int matrizNivel[10][14] ){
 	return listaLimitesProhibidos;
 }
 
+//Funcion que retorna la lista de pociones en pixeles de los enemigos de cada matriz que le pasemos
 list<int> Controller:: encontrarPosicionesEnemigos( int matrizNivel[10][14] ){
 	int i, j;
 	list <int> listaEnemigos;
@@ -43,7 +44,7 @@ list<int> Controller:: encontrarPosicionesEnemigos( int matrizNivel[10][14] ){
 	}
 	return listaEnemigos;
 }
-
+//Funcion que verifica la fase del juego, Fase = 1 es donde esta la llave del primer nivel, Fase = 2, donde esta el trofeo del primer nivel,  Fase = 3 es donde esta la llave del segundo nivel, Fase = 4, donde esta el trofeo del segundo nivel
 void Controller::verificarFase(int * x, int * y, int * faseActual ){
 	if(*faseActual == 1 &&  *x >= 150 && *x <= 200 && *y >= 50 && *y <= 100  ){
 		*faseActual += 1;
@@ -61,7 +62,7 @@ void Controller::verificarFase(int * x, int * y, int * faseActual ){
 	}
 }
 
-
+//Funcion que verifica si entro en batalla o no
 void Controller::verificarFaseBatalla(int * x, int * y, int * faseActualBatalla ){
 	if(*faseActualBatalla == 1 &&  *x >= 150 && *x <= 200 && *y >= 50 && *y <= 100  ){
 		*faseActualBatalla += 1;
@@ -79,30 +80,30 @@ void Controller::verificarFaseBatalla(int * x, int * y, int * faseActualBatalla 
 	}
 }
 
+//Funcion que muestra los numeros en posicion x, y grandes
 void Controller :: mostrarNumero(int numero, BITMAP * numeros, int x, int y, BITMAP * buffer){
 	int i, pixelesHaciaLaDerecha;
 	for(i = 2; i > -1; i--){
 		pixelesHaciaLaDerecha = ((numero % 10) * 25);
 		masked_blit(numeros, buffer, pixelesHaciaLaDerecha , 0 , x + (25*i), y, 25, 25 ); 
-		//masked_blit(prota, buffer, 0, direccion, x, y, 32,40);
 		numero -= numero % 10;
 		numero = numero / 10;
 	}
 	
 }
 
+//Funcion que muestra los numeros en posicion x, y pequenios
 void Controller :: mostrarNumeroPequenio(int numero, BITMAP * numeros, int x, int y, BITMAP * buffer){
 	int i, pixelesHaciaLaDerecha;
 	for(i = 2; i > 0; i--){
 		pixelesHaciaLaDerecha = ((numero % 10) * 7);
 		masked_blit(numeros, buffer, pixelesHaciaLaDerecha , 0 , x + (7*i), y, 7, 7 ); 
-		//masked_blit(prota, buffer, 0, direccion, x, y, 32,40);
 		numero -= numero % 10;
 		numero = numero / 10;
 	}
 	
 }
-
+//Funcion que se llama en view, muestra los datos del personaje (Vida, resistencia, ataque y mana)
 void Controller :: mostrarDatosPersonaje(BITMAP * numeros, BITMAP * buffer){
 	mostrarNumero(jugador.getVida(), numeros, 0, 665, buffer);
 	mostrarNumero(jugador.getResistencia(), numeros, 100, 665, buffer);
@@ -110,12 +111,13 @@ void Controller :: mostrarDatosPersonaje(BITMAP * numeros, BITMAP * buffer){
 	mostrarNumero(jugador.getMana(), numeros, 300, 665, buffer);
 }
 
+//Funcion que se llama en view, y muestra la vida resistencia y ataque del enemigo en batalla
 void Controller :: mostrarDatosEnemigo(BITMAP * numeros, BITMAP * buffer, Enemigo enemigoBatalla){
 	mostrarNumero(enemigoBatalla.getVida(), numeros, 450, 40, buffer);
 	mostrarNumero(enemigoBatalla.getResistencia(), numeros, 450, 95, buffer);
 	mostrarNumero(enemigoBatalla.getAtaque(), numeros, 450, 145, buffer);
 }
-
+//Funcion que cambia la vida del jugador en batalla, (VidaJugador = VidaJugador ( ataqueEnemigo - resistenciaEnemigo ))
 void Controller::cambiarVidaJugador( Enemigo enemigoBatalla ){
 	if(enemigoBatalla.getAtaque() >= jugador.getResistencia()){
 		jugador.setVida( jugador.getVida() - (enemigoBatalla.getAtaque() - jugador.getResistencia()) );
@@ -123,10 +125,12 @@ void Controller::cambiarVidaJugador( Enemigo enemigoBatalla ){
 	
 }
 
+//Funcion que cuando muere el jugador se le reinicia la vida en 200 ya que es la vida maxima
 void Controller::reiniciarVida( ){
 	jugador.setVida( 200 );
 }
 
+//Funcion que da un item aleatorio dependiendo de lo que sea segun el enum de item en cada pelea
 void Controller::darItemAleatorio(){
 	int numeroAleatorio;
 	srand(time(NULL));
@@ -136,7 +140,7 @@ void Controller::darItemAleatorio(){
 	}
 	
 }
-
+//Funcion que se llama en View y muestra el inventario del jugador, con su respectivo dibujo y si es una espada, arco o lanza se muestra la durabilidad de cada item
 void Controller::mostrarInventario( BITMAP * buffer, BITMAP * numeritos ){
 	int i = 0, j = 0;
 	list<Item*> inventarioJugador =  jugador.getInventario();
@@ -174,18 +178,20 @@ void Controller::mostrarInventario( BITMAP * buffer, BITMAP * numeritos ){
 	}
 	
 }
-
+//Funcion que se llama en el View, cuando muere el jugador el inventario queda vacio
 void Controller::vaciarInventario(){
 	list< Item * > inventarioVacio;
 	jugador.setInventario( inventarioVacio );
 }
 
+//Funcion que cambia el cama del jugador
 void Controller::cambiarMana( int costoMana ){
 	jugador.setMana( jugador.getMana() - costoMana );
 }
 
+//Funcion el cual solo se puede usar en batalla la cual verifica en cada cuadrito del inventario de que tipo de item es
+//si es arma o pocion y actua mediante eso y alfinal se le remplaza el inventario que tenia a este y asi susecivamente
 void Controller::usarInventario( Enemigo * enemigoBatalla ){
-	
 	int inicioX = 589, inicioY = 608, inicioXAbajo = 589, inicioYAbajo = 658, cantidadItems = 0;
 	list<Item*> inventarioJugador =  jugador.getInventario();
 	for(list<Item *>::iterator it = inventarioJugador.begin(); it != inventarioJugador.end(); it++ ){
@@ -303,10 +309,6 @@ void Controller::usarInventario( Enemigo * enemigoBatalla ){
 							cambiarVidaJugador( *enemigoBatalla );
 							espada->setDurabilidad( espada->getDurabilidad() - 1 );
 							if( espada->getDurabilidad() == 0 ){
-								//Saber cuando se toma pociones de ataque y eso pense en hacerlo con ataque base y con ello una vez se utilize 
-								//seria reiniciar el ataque el cual se aumenta del uso del arma y con ello se restableze el ataque al ataque base que habia
-								
-								//pero mientras dejarlo asi
 								inventarioJugador.erase( it );
 							}
 						}
@@ -394,4 +396,3 @@ void Controller::usarInventario( Enemigo * enemigoBatalla ){
 	}
 	jugador.setInventario( inventarioJugador );				
 }			
-			

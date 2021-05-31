@@ -11,7 +11,7 @@ using std::cout;
 using std::endl; 
 using std::string;
 
-
+//Se crea la clase Pocion con herencia a Item, su atributo, su constructor y sus diferentes metodos
 class Pocion : public Item{
     private:
     	int cantidadDeAumento;

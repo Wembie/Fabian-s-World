@@ -14,7 +14,7 @@ using std::cout;
 using std::endl; 
 using std::string;
 using std::list;
-
+//Se crea la clase Jugador con herencia a Personaje, con sus respetivos atributos, constructor y metodos
 class Jugador : public Personaje{
     private:
         int mana;

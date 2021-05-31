@@ -1,9 +1,9 @@
 #include "View.h"
-
+//Iniciamos el controller pa controlar xd, a
 View::View(){
     controller = Controller();
 }
-
+//Inicializacion del allegro
 void View::inicializarAllegro(){
 	allegro_init();
 	install_keyboard();
@@ -12,7 +12,7 @@ void View::inicializarAllegro(){
 	set_color_depth(32);
 	set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 700, 0, 0);
 }
-
+//Verifica donde esta el enemigo, esto se hace con la listaPosicionesEnemigos, que en controller la funcion es (encontrarPosicionesEnemigos), ya con esta lista, recorre con dos iteradores, el primero es donde empieza la lista de enemigos una posicion mas, y el otro iterador es donde empieza la lista de enemigos. Luego se verifica las posiciones en "x y "y" con sus diferentes dimensiones, i si lo encuentra va a colocar comienzaBatalla en 1, esto se hace con apuntador para que mas abajo se pueda verificar, al igual que xEnemigo y yEnemigo (posiciones del enemigo)
 void View::verificarInicioBatalla( list<int> listaPosicionesEnemigos, int x, int y, int *comienzaBatalla, int * xEnemigo, int * yEnemigo ){
 	list<int>::iterator it2 = listaPosicionesEnemigos.begin();
 	it2++;
@@ -42,7 +42,7 @@ void View::verificarInicioBatalla( list<int> listaPosicionesEnemigos, int x, int
 		it2++;
 	}
 }
-
+//Verifica las colisiones dependiendo de las prohibiciones recibidas por parametro
 void View::verificarLimites(list<int> listaLimites ,int * prohibidoArriba, int *  prohibidoAbajo, int *  prohibidoIzquierda, int *  prohibidoDerecha, int x, int y){
 	list<int>::iterator it2 = listaLimites.begin();
 	it2++;
@@ -63,7 +63,7 @@ void View::verificarLimites(list<int> listaLimites ,int * prohibidoArriba, int *
 		it2++;
 	}
 }
-
+//Pone el fondo del nivel dependiendo de la fase en que vaya
 void View::ponerFondo(BITMAP * lobbyA, BITMAP * lobbyA2,BITMAP * lobbyB ,  BITMAP * lobbyB2, int fase, BITMAP * buffer){
 	if(fase == 1){
 		blit( lobbyA, buffer,0 ,0 , 0, 0, 800, 700);
@@ -81,11 +81,11 @@ void View::ponerFondo(BITMAP * lobbyA, BITMAP * lobbyA2,BITMAP * lobbyB ,  BITMA
 		blit( lobbyB2, buffer,0 ,0 , 0, 0, 800, 700);
 	}
 }
-
+//funcion que retorna un 1 si gana o un 0 si pierde, y el ciclo de batalla obviamente
 int View::cicloBatalla(BITMAP * buffer, BITMAP * fondoBatalla, BITMAP * enemigo, BITMAP * cursor, BITMAP *  numeros, BITMAP * numeritos, int fase ){
 	int salirBatalla = 0;
 	Enemigo enemigoBatalla;
-	if(fase == 1 || fase == 2){
+	if(fase == 1 || fase == 2){ //se crea un enemigo dependiendo del nivel
 		enemigoBatalla = Enemigo("WembiePeque", 50, 2, 2 );
 	}
 	else{
@@ -138,10 +138,10 @@ int View::cicloBatalla(BITMAP * buffer, BITMAP * fondoBatalla, BITMAP * enemigo,
 		masked_blit(cursor, buffer, 0, 0, mouse_x, mouse_y, 13, 22 ); 
 		blit(buffer, screen, 0, 0, 0, 0, 800, 700);
 		if(enemigoBatalla.getVida() <= 0){
-			return 1; //que ganó :D
+			return 1; //que ganï¿½ :D
 		}
 		else if(controller.getJugador().getVida() <= 0){
-			return 0; //que perdió :(
+			return 0; //que perdiï¿½ :(
 		}
 		if ( key[KEY_ESC] ) salirBatalla = 1;
 	}while(salirBatalla != 1);
@@ -149,7 +149,9 @@ int View::cicloBatalla(BITMAP * buffer, BITMAP * fondoBatalla, BITMAP * enemigo,
 }
 
 
-void View::cicloPrincipal(){
+void View::cicloPrincipal(){\
+
+	//Inicializacion de BITMAPS
 	BITMAP *buffer = create_bitmap(800, 700);
 	BITMAP *prota  = load_bmp("personaje.bmp",NULL);
 	BITMAP  *casa_a = load_bmp("fondoInicio.bmp",NULL);	//FONDO DE START EN BLANCO
@@ -168,12 +170,8 @@ void View::cicloPrincipal(){
 	BITMAP * numeros = load_bmp("numeros.bmp" , NULL);
 	BITMAP * pantallaWin = load_bmp("pantallaWin.bmp", NULL);
 	BITMAP * numeritos = load_bmp("numeritos.bmp", NULL);
-	
-	
 	BITMAP * fondoBatalla = load_bmp("batallaNivel1.bmp" , NULL);
-	BITMAP * prueba2 = load_bmp("espacio.bmp" , NULL);
-	
-	FONT * font = load_font("a.pcx", NULL, NULL);
+	//Musica
 	MIDI * sonidoSi = load_midi("musicaFondo.mid");
 	bool salir, salir2;
 	int x,y;
@@ -192,7 +190,7 @@ void View::cicloPrincipal(){
 	else{
 		play_midi(sonidoSi, FALSE);
 	}
-	
+	//Lobby de start 
 	while (!salir2){
         if( mouse_x > 288 && mouse_x < 538 && mouse_y > 388 && mouse_y < 430 ){
  		  	blit( casa_b, buffer, 0, 0, 0, 0, 800, 700 ); //poner imagen
@@ -209,6 +207,8 @@ void View::cicloPrincipal(){
         if ( key[KEY_ESC] ) salir2 = true;
         blit( buffer, screen, 0, 0, 0, 0, 800, 700 ); //actualiza pantalla    
 	}
+	
+	//Matriz nivel 1
 	int matrizNivel1[10][14]=  {{0, 0, 0 ,0 ,2 ,0 ,2 ,1 ,0 ,2 ,0 ,1 ,0 ,0},
 								{0, 1, 1 ,1 ,1 ,1 ,0 ,2 ,0 ,1 ,0 ,0 ,2 ,1},
 								{0, 1, 0, 2, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
@@ -219,7 +219,7 @@ void View::cicloPrincipal(){
 								{0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0},
 								{0, 1, 1, 1, 0, 2, 0, 1, 2, 1, 1, 0, 1, 0},
 								{0, 2, 0, 2, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0}};
-								
+	//Matriz nivel 2							
 	int matrizNivel2[10][14] = {{0, 0, 2, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 2},
 								{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
 								{2, 0, 0, 0, 2, 0, 2, 0, 2, 0, 0, 2, 1, 0},
@@ -235,6 +235,7 @@ void View::cicloPrincipal(){
 	int yEnemigoPixeles;
 	list<int> listaLimites = controller.encontrarLimites(matrizNivel1);
 	list<int> listaPosicionesEnemigos = controller.encontrarPosicionesEnemigos(matrizNivel1);
+	//Empieza el ciclo del juego como tal
 	while ( !salir ){ 
 	
 		if ( key[KEY_ESC] ) salir = true;
@@ -243,10 +244,10 @@ void View::cicloPrincipal(){
  		prohibidoIzquierda = 0;
  		prohibidoDerecha = 0;
         ponerFondo(lobbyA, lobbyA2, lobbyB, lobbyB2, fase, buffer);
-        if(fase == 1 || fase == 2){
+        if(fase == 1 || fase == 2){// segun cada fase coloca enemigos de un item u otro
         	controller.getEnemigo().ponerEnemigo(enemigoBase, buffer, listaPosicionesEnemigos);
 		}
-        else{
+        else{ //Lo mismo de arriba, pero en fase del nivel 2
         	controller.getEnemigo().ponerEnemigo(enemigoBase2, buffer, listaPosicionesEnemigos);
 		}
         controller.mostrarDatosPersonaje(numeros, buffer);
@@ -255,11 +256,11 @@ void View::cicloPrincipal(){
  		verificarLimites(listaLimites, &prohibidoArriba, &prohibidoAbajo, &prohibidoIzquierda, &prohibidoDerecha, x, y );
         controller.getJugador().teclas(prota, buffer, &x, &y, prohibidoDerecha, prohibidoIzquierda, prohibidoAbajo, prohibidoArriba );
         controller.verificarFase(&x, &y, &fase);
-        if(fase == 3 ){
+        if(fase == 3 ){// cuando pasa al nivel 2 se cambia de matriz y con ello la posicion de los enemigos
         	listaLimites = controller.encontrarLimites(matrizNivel2);
         	listaPosicionesEnemigos = controller.encontrarPosicionesEnemigos(matrizNivel2);
 		}
-		if(fase == 5){
+		if(fase == 5){ // si la fase esta en 5 es decir que gano y se muestra dicha pantalla
 			while(!key[KEY_ESC]){
 				blit( pantallaWin, buffer,0 ,0 , 0, 0, 800, 700);
 				blit(buffer, screen, 0, 0, 0, 0, 800, 700);
@@ -269,47 +270,51 @@ void View::cicloPrincipal(){
 		
 		
 		verificarInicioBatalla(listaPosicionesEnemigos, x, y, &comienzaBatalla, &xEnemigoPixeles, &yEnemigoPixeles );
- 		if( comienzaBatalla == 1 ){
- 				if (fase == 1 || fase == 2){
+ 		if( comienzaBatalla == 1 ){ //Si encontro un enemigo por donde sea y lo toco
+ 				if (fase == 1 || fase == 2){ //Y si la fase es 1 o 2 (Nivel 1) va a colocar el enemigo correspondiente, en este caso es del nivel 1
  					ganoBatalla = cicloBatalla ( buffer, fondoBatalla, enemigoEnBatalla1, cursor, numeros, numeritos, fase);
 				 }
- 				else{
+ 				else{ //Lo mismo de arriba, pero con el nivel 2
  					ganoBatalla = cicloBatalla ( buffer, fondoBatalla, enemigoEnBatalla2, cursor, numeros, numeritos, fase);
 				 }
  				if(ganoBatalla == 1){
  					//celebra :D
- 					if(fase == 1 || fase == 2){
+ 					if(fase == 1 || fase == 2){//dependiendo de la fase se elimina un enemigo u otro
  						matrizNivel1[xEnemigoPixeles][yEnemigoPixeles] = 0;
  						listaPosicionesEnemigos = controller.encontrarPosicionesEnemigos(matrizNivel1);
 					 }
-					 else{
+					 else{ // Lo mismo de arriba, pero con el nivel 2
 					 	matrizNivel2[xEnemigoPixeles][yEnemigoPixeles] = 0;
 					 	listaPosicionesEnemigos = controller.encontrarPosicionesEnemigos(matrizNivel2);
 					 }
 					 controller.darItemAleatorio();				
 				 }
 				 else{
+					//se devuelve al personaje en la posicion original y se le reinicia la vida y chao inventario
 				 	x = 55;
 				 	y = 55;
-				 	controller.reiniciarVida();
-				 	controller.vaciarInventario();
+				 	controller.reiniciarVida(); //F por la vida
+				 	controller.vaciarInventario(); //F por el inventario
 				 }
 		 }
-		 comienzaBatalla = 0;
- 		//Hacer lo de enemigo(arriba) ?
+		 comienzaBatalla = 0;//se reestablece que ya no esta en batalla
 		
+		/////////////////////////////////////////////////////
+		//SI LEES ESTO SIGINIFICA QUE NOS VAS A EXONERAR :D//
+		/////////////////////////////////////////////////////
 	
-        // limites
+        // limites de los bordes para que el personaje no se salga del cuadrado de los bloques
         if ( x < 0 ) x = 0;
         if ( x > 800 ) x = 800;
         if ( y < 0 ) y = 0;
         if ( y > 600 ) y = 600;  
-		        
+		//Se muestra el cursor y luego actualiza la pantalla
         masked_blit(cursor, buffer, 0, 0, mouse_x, mouse_y, 13, 22 ); 
-        blit(buffer, screen, 0, 0, 0, 0, 800, 700);
-        rest(10);
+        blit(buffer, screen, 0, 0, 0, 0, 800, 700); //actualiazar pantalla de todo lo acumulado en el buffer
+        rest(10);//se demora 10 milisegundos en hacer lo anterior
        // tecla de salida
     }  
+	//muricion de los bitsmaps por q ya se acabo el game :c
 	destroy_bitmap(prota);
 	destroy_bitmap(buffer);
 }

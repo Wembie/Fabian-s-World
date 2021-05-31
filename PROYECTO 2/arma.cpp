@@ -6,7 +6,7 @@ Arma :: Arma( Tipo tipo, BITMAP * texturaItem , int puntosAtaque, int durabilida
 }
 
 void Arma::mostrarItem( int x, int y, BITMAP * buffer ){
-	masked_blit(texturaItem, buffer, 0, 0, x, y, 28,28);
+	masked_blit(texturaItem, buffer, 0, 0, x, y, 28,28); //Clase Abstracta
 }
 
 int Arma::getPuntosAtaque(){

@@ -10,6 +10,8 @@ using std::cout;
 using std::endl; 
 using std::string;
 
+//Se crea la clase Personaje, con sus respetivos atributos, constructor y metodos
+
 class Personaje{
     protected:
         string nombre;
@@ -19,7 +21,6 @@ class Personaje{
     public:
     	Personaje();
         Personaje( string, int, int, int );
-        void comienzoBatallaEpica( BITMAP * , BITMAP * , int * , int * , int  );
         void moverBatalla( BITMAP *, BITMAP *, int  , int , int  );
         int getVida();
         int	getAtaque();

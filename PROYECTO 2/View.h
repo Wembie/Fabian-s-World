@@ -11,12 +11,11 @@ using std::endl;
 using std::list;
 using std::string;
 
+//Se crea la clase View, su atributo, su constructor y sus diferentes metodos
 class View{
 private:
     // Objeto de tipo controller para enlazar la logica
     Controller controller;
-    
-
 public:
     View();
     void verPrincipal();
