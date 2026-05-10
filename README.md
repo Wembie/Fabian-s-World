@@ -1,4 +1,7 @@
-# 🌍 Fabian's World
+# Fabian-s-World
+
+Onichan Yamete Kudasai
+EXONERADOS (emoticon_de_carita_facherita)
 
 Videojuego de aventura y combate en 2D desarrollado en **C++** con la librería gráfica **Allegro**, como proyecto universitario.
 
